@@ -1,9 +1,14 @@
 package cmp
 
-// Comparable - comparable values interface
-type Comparable interface {
-	// LessThan - value less than
-	LessThan(v interface{}) bool
-	// EqualTo - values are equal
-	EqualTo(v interface{}) bool
+// Lesser - comparable with `less than`
+type Lesser interface {
+	// Less - value less than
+	Less(Lesser) bool
+}
+
+// Comparer - comparable with `less than` and `equal` values
+type Comparer interface {
+	Lesser
+	// Equal - values are equal
+	Equal(Comparer) bool
 }

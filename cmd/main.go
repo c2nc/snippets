@@ -9,7 +9,7 @@ import (
 
 type IntVal int
 
-func (c IntVal) LessThan(v interface{}) bool {
+func (c IntVal) Less(v interface{}) bool {
 	if cv, ok := v.(IntVal); ok {
 		return c < cv
 	}
@@ -17,7 +17,7 @@ func (c IntVal) LessThan(v interface{}) bool {
 	return false
 }
 
-func (c IntVal) EqualTo(v interface{}) bool {
+func (c IntVal) Equal(v interface{}) bool {
 	if cv, ok := v.(IntVal); ok {
 		return c == cv
 	}

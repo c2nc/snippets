@@ -28,6 +28,6 @@ type Subscription interface {
 
 // Event - something event
 type Event interface {
-	cmp.Comparable
+	cmp.Comparer
 	GetName() string
 }

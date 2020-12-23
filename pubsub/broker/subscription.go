@@ -28,5 +28,3 @@ func (s *Subscription) GetName() string {
 func (s *Subscription) Events() chan pubsub.Event {
 	return s.chEv
 }
-
-

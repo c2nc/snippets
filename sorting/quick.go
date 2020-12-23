@@ -6,7 +6,7 @@ func QuickSortInt(s []int) {
 		return
 	}
 
-	pi := len(s)-1
+	pi := len(s) - 1
 	left := 0
 	right := pi
 

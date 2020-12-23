@@ -104,5 +104,3 @@ func (b *brokerImpl) Stop() error {
 func onStoppedBrokerError(fn string) error {
 	return errors.NewfConst("try %s on stopped broker", fn)
 }
-
-
