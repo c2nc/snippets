@@ -1,6 +1,7 @@
 package trees
 
 import (
+	"github.com/c2nc/snippets/cmp"
 	"github.com/c2nc/snippets/errors"
 )
 
@@ -10,7 +11,7 @@ var (
 )
 
 type btreeNode struct {
-	val   int
+	val   cmp.Comparable
 	left  *btreeNode
 	right *btreeNode
 }
@@ -21,19 +22,22 @@ func NewBinaryTree() *btreeNode {
 }
 
 // Insert - insert value into bt
-func (tn *btreeNode) Insert(v int) error {
+func (tn *btreeNode) Insert(v cmp.Comparable) error {
 	switch {
 	case tn == nil:
 		return errEmptyTree
-	case tn.val == v:
+	case tn.val == nil:
+		tn.val = v
+		return nil
+	case tn.val.EqualTo(v):
 		return errValueExist
-	case v > tn.val:
+	case tn.val.LessThan(v):
 		if tn.right == nil {
 			tn.right = &btreeNode{val: v}
 			return nil
 		}
 		return tn.right.Insert(v)
-	case v < tn.val:
+	case v.LessThan(tn.val):
 		if tn.left == nil {
 			tn.left = &btreeNode{val: v}
 			return nil
@@ -46,28 +50,28 @@ func (tn *btreeNode) Insert(v int) error {
 }
 
 // Delete - remove value and node fom bt
-func (tn *btreeNode) Delete(n int) {
-	tn = tn.remove(n)
+func (tn *btreeNode) Delete(v cmp.Comparable) {
+	tn = tn.remove(v)
 }
 
 // Find - search value in slice
-func (tn *btreeNode) Find(n int) *btreeNode {
+func (tn *btreeNode) Find(v cmp.Comparable) *btreeNode {
 	if tn == nil {
 		return tn
 	}
 
 	switch {
-	case n == tn.val:
+	case v.EqualTo(tn.val):
 		return tn
-	case n < tn.val:
-		return tn.Find(n)
+	case v.LessThan(tn.val):
+		return tn.Find(v)
 	default:
-		return tn.right.Find(n)
+		return tn.right.Find(v)
 	}
 }
 
 // GetMin - get minimal value
-func (tn *btreeNode) GetMin() int {
+func (tn *btreeNode) GetMin() cmp.Comparable {
 	if tn.left == nil {
 		return tn.val
 	}
@@ -76,7 +80,7 @@ func (tn *btreeNode) GetMin() int {
 }
 
 // GetMax - get maximum value
-func (tn *btreeNode) GetMax() int {
+func (tn *btreeNode) GetMax() cmp.Comparable {
 	if tn.right == nil {
 		return tn.val
 	}
@@ -85,8 +89,8 @@ func (tn *btreeNode) GetMax() int {
 }
 
 // Iter - bt sorted iterator
-func (tn *btreeNode) Iter() <-chan int {
-	iter := make(chan int)
+func (tn *btreeNode) Iter() <-chan cmp.Comparable {
+	iter := make(chan cmp.Comparable)
 
 	go func() {
 		tn.iterTreeSorted(iter)
@@ -97,7 +101,7 @@ func (tn *btreeNode) Iter() <-chan int {
 	return iter
 }
 
-func (tn *btreeNode) iterTreeSorted(i chan int) {
+func (tn *btreeNode) iterTreeSorted(i chan cmp.Comparable) {
 	if tn != nil {
 		tn.left.iterTreeSorted(i)
 		i <- tn.val
@@ -113,16 +117,16 @@ func (tn *btreeNode) inorderShift() *btreeNode {
 	return cur
 }
 
-func (tn *btreeNode) remove(n int) *btreeNode {
+func (tn *btreeNode) remove(v cmp.Comparable) *btreeNode {
 	if tn == nil {
 		return nil
 	}
 
 	switch {
-	case n < tn.val:
-		tn.left = tn.left.remove(n)
-	case n > tn.val:
-		tn.right = tn.right.remove(n)
+	case v.LessThan(tn.val):
+		tn.left = tn.left.remove(v)
+	case tn.val.LessThan(v):
+		tn.right = tn.right.remove(v)
 	default:
 		if tn.left == nil {
 			return tn.right

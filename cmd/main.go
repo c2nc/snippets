@@ -7,10 +7,28 @@ import (
 	"github.com/c2nc/snippets/trees"
 )
 
+type IntVal int
+
+func (c IntVal) LessThan(v interface{}) bool {
+	if cv, ok := v.(IntVal); ok {
+		return c < cv
+	}
+
+	return false
+}
+
+func (c IntVal) EqualTo(v interface{}) bool {
+	if cv, ok := v.(IntVal); ok {
+		return c == cv
+	}
+
+	return false
+}
+
 func main() {
 	t := trees.NewBinaryTree()
 	for _, v := range sorting.GenIntSlice(20, 0) {
-		t.Insert(v)
+		t.Insert(IntVal(v))
 	}
 
 	fmt.Println("tree before deleting")
@@ -18,7 +36,7 @@ func main() {
 		fmt.Println(n)
 	}
 
-	t.Delete(10)
+	t.Delete(IntVal(10))
 
 	fmt.Println("tree after deleting")
 	for n := range t.Iter() {
