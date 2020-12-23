@@ -1,5 +1,9 @@
 package pubsub
 
+import (
+	"github.com/c2nc/snippets/cmp"
+)
+
 // Broker - events broker
 type Broker interface {
 	// Start - start broker
@@ -24,6 +28,6 @@ type Subscription interface {
 
 // Event - something event
 type Event interface {
+	cmp.Comparable
 	GetName() string
-	Equal(v interface{}) bool
 }
