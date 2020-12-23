@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 
+	"github.com/c2nc/snippets/cmp"
 	"github.com/c2nc/snippets/sorting"
 	"github.com/c2nc/snippets/trees"
 )
 
 type IntVal int
 
-func (c IntVal) Less(v interface{}) bool {
+func (c IntVal) Less(v cmp.Lesser) bool {
 	if cv, ok := v.(IntVal); ok {
 		return c < cv
 	}
@@ -17,7 +18,7 @@ func (c IntVal) Less(v interface{}) bool {
 	return false
 }
 
-func (c IntVal) Equal(v interface{}) bool {
+func (c IntVal) Equal(v cmp.Comparer) bool {
 	if cv, ok := v.(IntVal); ok {
 		return c == cv
 	}
